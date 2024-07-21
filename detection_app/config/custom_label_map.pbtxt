@@ -1,0 +1,77 @@
+item {
+  id: 1
+  name: 'person'
+}
+item {
+  id: 17
+  name: 'cat'
+}
+item {
+  id: 18
+  name: 'dog'
+}
+item {
+  id: 19
+  name: 'horse'
+}
+item {
+  id: 20
+  name: 'sheep'
+}
+item {
+  id: 21
+  name: 'cow'
+}
+item {
+  id: 22
+  name: 'elephant'
+}
+item {
+  id: 23
+  name: 'bear'
+}
+item {
+  id: 24
+  name: 'zebra'
+}
+item {
+  id: 25
+  name: 'giraffe'
+}
+item {
+  id: 26
+  name: 'chicken'
+}
+item {
+  id: 27
+  name: 'goat'
+}
+item {
+  id: 28
+  name: 'duck'
+}
+item {
+  id: 29
+  name: 'pig'
+}
+item {
+  id: 30
+  name: 'rabbit'
+}
+item {
+  id: 31
+  name: 'hamster'
+}
+
+item {
+  id: 33
+  name: 'goldfish'
+}
+item {
+  id: 34
+  name: 'turkey'
+}
+item {
+  id: 35
+  name: 'donkey'
+}
