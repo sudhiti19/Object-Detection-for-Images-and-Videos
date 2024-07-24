@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Animal & Pedestrian Safety{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Hide scrollbar on body */
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            text-align: center;
+            padding: 1rem;
+            background-color: #003366;
+            color: white;
+            width: 100%;
+            position: fixed; /* Fixed header */
+            top: 0;
+            left: 0;
+            z-index: 800;
+        }
+        nav ul {
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 1rem;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .content-container {
+            flex: 1;
+            padding: 1rem;
+            margin-top: 80px; /* Adjust based on header height */
+            overflow: auto; /* Enable scrolling */
+        }
+        .result-container {
+            text-align: center;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        .result-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+        .button-container {
+            text-align: center;
+            margin: 2rem auto;
+        }
+        .button-container .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #003366;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin: 0 1rem;
+        }
+        .button-container .button:hover {
+            background-color: #0056b3;
+        }
+        h2 {
+            text-align: center;
+            background-color: white;
+            padding: 10px;
+            margin: 20px auto;
+            max-width: 600px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%; /* Optional: makes table full width */
+            border-collapse: collapse; /* Optional: collapse borders */
+            background-color: white; /* Sets the background color of the table */
+        }
+        th, td {
+            padding: 0.75rem 1rem; /* Optional: adds padding */
+            border: 1px solid #ddd; /* Optional: border color and style */
+        }
+        thead {
+            background-color: #f2f2f2; /* Optional: different color for header row */
+        }
+    </style>
+    <script>
+        function confirmDelete(event, formId) {
+            event.preventDefault(); // Prevent the form from submitting immediately
+            const form = document.getElementById(formId);
+            if (confirm("Are you sure you want to delete this item?")) {
+                form.submit(); // Submit the form if the user confirms
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Animal & Pedestrian Safety</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="{% url 'uploaded_files_list' %}">View All Uploads</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="content-container">
+        <h2>List of Uploaded Videos and Images</h2>
+
+        <h2>Videos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Original Video</th>
+                    <th>Detected Video</th>
+                    <th>Actions</th> <!-- New column for actions -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for video in detection_videos %}
+                <tr>
+                    <td><a href="{{ video.original_video.video.url }}">{{ video.original_video.video.name }}</a></td>
+                    <td><a href="{{ video.result_video.url }}">{{ video.result_video }}</a></td>
+                    <td>
+                        <form id="delete-video-form-{{ video.id }}" action="{% url 'delete_detection_video' video.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="button" onclick="confirmDelete(event, 'delete-video-form-{{ video.id }}')" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No videos uploaded.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Images</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Original Image</th>
+                    <th>Detected Image</th>
+                    <th>Actions</th> <!-- New column for actions -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for image in detection_images %}
+                <tr>
+                    <td><a href="{{ image.original_image.image.url }}">{{ image.original_image.image.name }}</a></td>
+                    <td><a href="{{ image.result_image.url }}">{{ image.result_image }}</a></td>
+                    <td>
+                        <form id="delete-image-form-{{ image.id }}" action="{% url 'delete_detection_image' image.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="button" onclick="confirmDelete(event, 'delete-image-form-{{ image.id }}')" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No images uploaded.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -9,41 +9,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
     <style>
-        /* Inline styles for demonstration purposes */
-        
         body {
-    margin: 0;
-    padding: 0;
-    position: relative; /* Needed for the ::before pseudo-element to position correctly */
-}
-    .blurred-background::before  {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('/static/images/background.png') no-repeat center center/cover;;
-    filter: blur(2px); /* Adjust the blur intensity as needed */
-    z-index: -1;
-}
-
+            margin: 0;
+            padding: 0;
+            position: relative; /* Needed for the ::before pseudo-element to position correctly */
+        }
+        .blurred-background::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('/static/images/background.png') no-repeat center center/cover;
+            filter: blur(2px); /* Adjust the blur intensity as needed */
+            z-index: -1;
+        }
         .upload-container {
             text-align: center;
             margin: 4rem auto; /* Move the box down */
             padding: 3rem;
             margin-top: 7rem;
             padding-bottom: 2rem;
-            
             max-width: 600px;
         }
-
-        
-
         .upload-container input[type="file"] {
             display: none;
         }
-
         .upload-container .drop-area {
             border: 2px dashed #003366;
             border-radius: 10px;
@@ -52,33 +44,32 @@
             position: relative;
             background: #fff;
         }
-
         .upload-container .drop-area:hover {
             background-color: #003366;
             color: white;
         }
-
         .upload-container .drop-area .icon {
             font-size: 3rem;
             color: inherit;
             margin-bottom: 10px;
         }
-
         .upload-container .drop-area p {
             margin: 0;
         }
-
         .upload-container .drop-area .main-text {
             font-size: 1.25rem; /* Larger font size */
             font-weight: bold; /* Bold text */
             color: inherit;
         }
-
         .upload-container .drop-area .sub-text {
             font-size: 0.875rem; /* Smaller font size */
-            color: inherit;;
+            color: inherit;
         }
-
+        .upload-container .file-name {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #003366;
+        }
         .upload-container button {
             display: inline-block;
             padding: 0.75rem 1.5rem;
@@ -91,7 +82,6 @@
             transition: background-color 0.3s;
             margin-top: 1rem; /* Space between drop area and button */
         }
-
         .upload-container button:hover {
             background-color: #0056b3;
         }
@@ -106,6 +96,7 @@
                 <li><a href="{% url 'homepage' %}">Home</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact Us</a></li>
+                <li><a href="{% url 'uploaded_files_list' %}">View All Uploads</a></li>
             </ul>
         </nav>
     </header>
@@ -116,17 +107,20 @@
             {% csrf_token %}
             <div class="drop-area" id="drop-area">
                 <i class="fas fa-upload icon"></i>
-                <p class="main-text">Drag & drop your image here</p>
+                <p class="main-text">Drag & drop your video here</p>
                 <p class="sub-text">or click to browse</p>
-                <input type="file" name="image" accept="image/*" id="file-input" required>
+                <input type="file" name="video" accept="video/*" id="file-input" required>
+                
             </div>
-            <button type="submit">Upload Image</button>
+            <p class="file-name" id="file-name"></p>
+            <button type="submit">Upload Video</button>
         </form>
     </div>
 
     <script>
         const dropArea = document.getElementById('drop-area');
         const fileInput = document.getElementById('file-input');
+        const fileNameDisplay = document.getElementById('file-name');
 
         dropArea.addEventListener('click', () => fileInput.click());
 
@@ -145,6 +139,14 @@
             const files = event.dataTransfer.files;
             if (files.length) {
                 fileInput.files = files;
+                fileNameDisplay.textContent = `Selected file: ${files[0].name}`;
+            }
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const files = event.target.files;
+            if (files.length) {
+                fileNameDisplay.textContent = `Selected file: ${files[0].name}`;
             }
         });
     </script>
